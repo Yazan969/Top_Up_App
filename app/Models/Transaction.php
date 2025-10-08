@@ -1,5 +1,4 @@
 <?php
-// app/Models/Transaction.php
 
 namespace App\Models;
 
@@ -11,23 +10,65 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'transaction_code',
+        'user_id',
         'game_id',
-        'customer_id',
+        'transaction_id',
         'amount',
-        'item',
-        'quantity',
+        'price',
         'status',
-        'notes'
+        'player_id',
+        'server_id',
+        'payment_method',
+        'notes',
     ];
+
+    protected $casts = [
+        'amount' => 'integer',
+        'price' => 'decimal:2',
+    ];
+
+    const STATUS_PENDING = 'pending';
+    const STATUS_SUCCESS = 'success';
+    const STATUS_FAILED = 'failed';
+    const STATUS_PROCESSING = 'processing';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function game()
     {
         return $this->belongsTo(Game::class);
     }
 
-    public function customer()
+    public function getFormattedPriceAttribute()
     {
-        return $this->belongsTo(Customer::class);
+        return 'Rp ' . number_format($this->price, 0, ',', '.');
+    }
+
+    public function getFormattedAmountAttribute()
+    {
+        return number_format($this->amount, 0, ',', '.');
+    }
+
+    public function getStatusBadgeClassAttribute()
+    {
+        return [
+            'pending' => 'status-pending',
+            'success' => 'status-success',
+            'failed' => 'status-failed',
+            'processing' => 'status-pending',
+        ][$this->status] ?? 'status-pending';
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return [
+            'pending' => 'Pending',
+            'success' => 'Berhasil',
+            'failed' => 'Gagal',
+            'processing' => 'Diproses',
+        ][$this->status] ?? 'Pending';
     }
 }

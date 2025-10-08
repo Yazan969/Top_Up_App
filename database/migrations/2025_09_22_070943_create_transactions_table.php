@@ -1,5 +1,4 @@
 <?php
-// database/migrations/xxxx_xx_xx_xxxxxx_create_transactions_table.php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -11,15 +10,20 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->string('transaction_code')->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('game_id')->constrained()->onDelete('cascade');
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->decimal('amount', 15, 2);
-            $table->string('item');
-            $table->integer('quantity')->default(1);
-            $table->enum('status', ['pending', 'processing', 'completed', 'failed'])->default('pending');
+            $table->string('transaction_id')->unique();
+            $table->integer('amount');
+            $table->decimal('price', 12, 2);
+            $table->enum('status', ['pending', 'success', 'failed', 'processing'])->default('pending');
+            $table->string('player_id');
+            $table->string('server_id')->nullable();
+            $table->string('payment_method');
             $table->text('notes')->nullable();
             $table->timestamps();
+            
+            $table->index(['user_id', 'status']);
+            $table->index('transaction_id');
         });
     }
 

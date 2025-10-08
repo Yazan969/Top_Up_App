@@ -4,152 +4,119 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0A2463',
+                        secondary: '#1E40AF',
+                        accent: '#DC2626',
+                        dark: '#0F172A',
+                        light: '#F8FAFC',
+                        success: '#059669',
+                        orange: '#EA580C',
+                        gray: {
+                            50: '#F8FAFC',
+                            100: '#F1F5F9',
+                            200: '#E2E8F0',
+                            300: '#CBD5E1',
+                            400: '#94A3B8',
+                            500: '#64748B',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1E293B',
+                            900: '#0F172A'
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-dark': 'linear-gradient(135deg, #0A2463 0%, #1E40AF 100%)',
+                        'gradient-primary': 'linear-gradient(to right, #0A2463, #1E40AF)',
+                        'gradient-primary-hover': 'linear-gradient(to right, #1E40AF, #0A2463)',
+                    }
+                }
+            }
+        }
+    </script>
+    
     <style>
-         body {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
-            color: #f1f1f1;
-            min-height: 100vh;
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
-        .card {
-            width: 100%;
-            max-width: 500px;
-            border-radius: 12px;
-            background-color: #1e1e1e;
-            color: #f1f1f1;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            border: 1px solid #333;
+        
+        .card-hover {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .card:hover {
+        
+        .card-hover:hover {
             transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 12px 40px rgba(10, 36, 99, 0.3);
         }
-
-        .card-body {
-            padding: 2.5rem;
-        }
-
-        .form-label {
-            color: #ddd;
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control {
-            margin-bottom: 1.2rem;
-            background-color: #2c2c2c;
-            border: 1px solid #444;
-            color: #fff;
-            border-radius: 6px;
-            padding: 0.75rem 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .form-control:focus {
-            background-color: #2c2c2c;
-            border-color: #3d85c6;
-            box-shadow: 0 0 0 0.25rem rgba(61, 133, 198, 0.25);
-            color: #fff;
-        }
-
-        .form-control:hover {
-            border-color: #555;
-        }
-
+        
         .btn-submit {
-            background: linear-gradient(to right, #3d85c6, #2b6cb0);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 6px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 6px rgba(10, 36, 99, 0.2);
         }
-
+        
         .btn-submit:hover {
-            background: linear-gradient(to right, #2b6cb0, #215f9e);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 6px 12px rgba(10, 36, 99, 0.3);
         }
-
+        
         .btn-submit:active {
             transform: translateY(0);
         }
-
-        a {
-            color: #3d85c6;
-            font-weight: 500;
-            text-decoration: none;
-            transition: color 0.3s ease;
+        
+        .form-control {
+            transition: all 0.3s ease;
         }
-
-        a:hover {
-            color: #63b3ed;
-            text-decoration: underline;
+        
+        .form-control:focus {
+            box-shadow: 0 0 0 0.25rem rgba(10, 36, 99, 0.25);
         }
-
-        .alert {
+        
+        .alert-custom {
             border: none;
             border-radius: 8px;
             padding: 1rem 1.25rem;
             margin-bottom: 1.5rem;
+            border-left: 4px solid;
         }
-
-        .alert-danger {
-            background-color: rgba(220, 53, 69, 0.2);
+        
+        .alert-danger-custom {
+            background-color: rgba(220, 38, 38, 0.2);
             color: #f8d7da;
-            border-left: 4px solid #dc3545;
+            border-left-color: #DC2626;
         }
-
-        .alert-success {
-            background-color: rgba(25, 135, 84, 0.2);
+        
+        .alert-success-custom {
+            background-color: rgba(5, 150, 105, 0.2);
             color: #d1e7dd;
-            border-left: 4px solid #198754;
+            border-left-color: #059669;
         }
-
-        .text-center {
-            text-align: center;
-        }
-
-        h2 {
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: #e1e1e1;
-        }
-
-        .min-vh-100 {
-            min-height: 100vh;
-        }
-    </style>
     </style>
 </head>
 
-<body>
-    <div class="d-flex justify-content-center align-items-center min-vh-100 p-3 ">
-        <div class="card">
-            <div class="card-body">
-                <h2 class="card-title text-center mb-4">Form Login</h2>
+<body class="bg-gradient-dark text-gray-50 min-h-screen font-sans">
+    <div class="flex justify-center items-center min-h-screen p-6">
+        <div class="card-hover w-full max-w-md bg-gray-800 rounded-xl shadow-2xl border border-gray-700">
+            <div class="p-10">
+                <!-- Logo di tengah -->
+                <div class="flex justify-center mb-6">
+                    <img src="{{asset('images/L.jpg')}}" class="w-16 h-16 rounded-lg shadow-lg" alt="Logo Toko Top Up">
+                </div>
+                
+                <h2 class="text-2xl font-bold text-center mb-2 text-gray-100">Form Login</h2>
+                <p class="text-center text-gray-400 mb-8">Selamat datang di LIU Store</p>
+                
                 @if ($errors->any())
-                    <div class="alert alret-danger">
-                        <ul class="mb-0">
+                    <div class="alert-custom alert-danger-custom">
+                        <ul class="list-disc list-inside space-y-1">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -158,7 +125,7 @@
                 @endif
 
                 @if (session('success'))
-                    <div class="alert alert-success">
+                    <div class="alert-custom alert-success-custom">
                         {{ session('success') }}
                     </div>
                 @endif
@@ -166,35 +133,44 @@
                 <form method="POST" action="{{ route('login.submit') }}">
                     @csrf
 
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email"
-                            value="{{ old('email') }}" required>
+                    <div class="mb-6">
+                        <label for="email" class="block text-gray-300 font-medium mb-2">Email:</label>
+                        <input type="email" 
+                               id="email" 
+                               name="email" 
+                               value="{{ old('email') }}" 
+                               required
+                               class="form-control w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-200"
+                               placeholder="Masukkan email Anda">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password:</label>
-                        <input type="password" class="form-control" id="password" name="password" required>
+                    <div class="mb-8">
+                        <label for="password" class="block text-gray-300 font-medium mb-2">Password:</label>
+                        <input type="password" 
+                               id="password" 
+                               name="password" 
+                               required
+                               class="form-control w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors duration-200"
+                               placeholder="Masukkan password Anda">
                     </div>
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-submit">Login</button>
+
+                    <div class="mb-6">
+                        <button type="submit" 
+                                class="btn-submit w-full bg-gradient-primary text-white font-semibold py-3 px-6 rounded-lg hover:bg-gradient-primary-hover">
+                            Login
+                        </button>
                     </div>
                 </form>
 
-                <p class="text-center mt-3">belum punya akun? <a href="{{ route('register.form') }}"
-                        class="text-decoration-none">Daftar</a></p>
-
+                <p class="text-center text-gray-400 mt-6">
+                    Belum punya akun? 
+                    <a href="{{ route('register.form') }}" 
+                       class="text-secondary font-medium hover:text-primary transition-colors duration-200 ml-1">
+                        Daftar
+                    </a>
+                </p>
             </div>
         </div>
     </div>
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
-    </script>
-</body>
-
-</html>
-
 </body>
 </html>

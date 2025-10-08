@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\Game;
 
 class TopupController extends Controller
 {
@@ -19,14 +20,21 @@ class TopupController extends Controller
         return view('topup.index2', compact('games'));
     }
 
-    public function index4()
+    public function Transaksi()
     {
-        return view('topup.index4');
+        return view('topup.index3');
     }
 
         public function index() 
     {
-        return view('topup.index3');
+        
+        $games = Game::all();
+        return view('topup.index4',  compact('games'));
+    }
+
+    public function profil() 
+    {
+        return view('topup.profil');
     }
 
 

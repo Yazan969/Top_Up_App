@@ -6,12 +6,13 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
     public function index()
     {
-        $games = Game::all();
+        $games = Game::latest()->paginate(10);
         return view('games.index', compact('games'));
     }
 
@@ -20,53 +21,64 @@ class GameController extends Controller
         return view('games.create');
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'developer' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'topup_rate' => 'required|numeric|min:0.1',
-            'description' => 'nullable|string',
-        ]);
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'name'        => 'required|unique:games',
+        'developer'   => 'required',
+        'category'    => 'required',
+        'topup_rate'  => 'required|numeric',
+        'description' => 'nullable',
+        'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
 
-        Game::create($request->all());
-
-        return redirect()->route('games.index')
-            ->with('success', 'Game berhasil ditambahkan.');
+    if ($request->hasFile('logo')) {
+        // simpan path relatif: games/abc123.jpg
+        $validated['logo'] = $request->file('logo')->store('games', 'public');
     }
 
-    public function show(Game $game)
-    {
-        return view('games.show', compact('game'));
+    Game::create($validated);
+
+    return redirect()->route('games.index')
+                     ->with('success', 'Game berhasil ditambahkan.');
+}
+
+public function update(Request $request, Game $game)
+{
+    $validated = $request->validate([
+        'name'        => 'required|string|max:255|unique:games,name,'.$game->id,
+        'developer'   => 'required|string|max:255',
+        'category'    => 'required|string',
+        'topup_rate'  => 'required|numeric|min:0',
+        'description' => 'nullable|string',
+        'logo'        => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    if ($request->hasFile('logo')) {
+        // Hapus file lama
+        if ($game->logo) {
+            Storage::disk('public')->delete($game->logo);
+        }
+        $validated['logo'] = $request->file('logo')->store('games', 'public');
     }
 
-    public function edit(Game $game)
-    {
-        return view('games.edit', compact('game'));
+    $game->update($validated);
+
+    return redirect()->route('games.index')
+                     ->with('success', 'Game berhasil diperbarui!');
+}
+
+public function destroy(Game $game)
+{
+    // Opsional: hapus file logo saat menghapus record
+    if ($game->logo) {
+        Storage::disk('public')->delete($game->logo);
     }
 
-    public function update(Request $request, Game $game)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'developer' => 'required|string|max:255',
-            'category' => 'required|string|max:255',
-            'topup_rate' => 'required|numeric|min:0.1',
-            'description' => 'nullable|string',
-        ]);
+    $game->delete();
 
-        $game->update($request->all());
+    return redirect()->route('games.index')
+                     ->with('success', 'Game berhasil dihapus.');
+}
 
-        return redirect()->route('games.index')
-            ->with('success', 'Game berhasil diperbarui.');
-    }
-
-    public function destroy(Game $game)
-    {
-        $game->delete();
-
-        return redirect()->route('games.index')
-            ->with('success', 'Game berhasil dihapus.');
-    }
 }

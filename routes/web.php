@@ -7,6 +7,7 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TopupController;
+use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,13 +33,12 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/', [TopupController::class, 'index2'])->name('topup.index');
 
- 
 
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [TopupController::class, 'index'])->name('dashboard');
-    Route::get('/beranda', [TopupController::class, 'index4'])->name('beranda');
-    Route::resource('games', GameController::class);
+    Route::get('/Riwayat Transaksi', [TopupController::class, 'Transaksi'])->name('Riwayat.Transaksi');
+    Route::get('/games', [GameController::class, 'index'])->name('games.index');
     Route::resource('transactions', TransactionController::class);
     Route::resource('customers', CustomerController::class);
 });
@@ -46,5 +46,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboardAdmin', [DashboardController::class, 'dashboardAdmin'])->name('dashboardAdmin');
+    Route::resource('games', GameController::class)->except(['index']);
 });
+
 

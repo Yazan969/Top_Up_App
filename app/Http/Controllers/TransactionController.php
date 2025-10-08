@@ -1,102 +1,101 @@
 <?php
-// app/Http/Controllers/TransactionController.php
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
 use App\Models\Game;
-use App\Models\Customer;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 
 class TransactionController extends Controller
 {
     public function index()
     {
-        $transactions = Transaction::with(['game', 'customer'])->latest()->get();
-        return view('transactions.index', compact('transactions'));
+        $user = Auth::user();
+        $transactions = Transaction::with('game')
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        $stats = [
+            'total' => $user->transactions()->count(),
+            'success' => $user->transactions()->where('status', 'success')->count(),
+            'pending' => $user->transactions()->where('status', 'pending')->count(),
+            'total_spent' => $user->transactions()->where('status', 'success')->sum('price'),
+        ];
+
+        return view('transactions', compact('transactions', 'stats'));
     }
 
-    public function create()
+    public function show($id)
     {
-        $games = Game::where('is_active', true)->get();
-        $customers = Customer::all();
-        return view('transactions.create', compact('games', 'customers'));
+        $transaction = Transaction::with(['game', 'user'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return view('transaction-detail', compact('transaction'));
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'game_id' => 'required|exists:games,id',
-            'customer_id' => 'required|exists:customers,id',
-            'amount' => 'required|numeric|min:0',
-            'item' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:1',
-            'notes' => 'nullable|string',
+            'amount' => 'required|integer|min:1',
+            'player_id' => 'required|string',
+            'server_id' => 'nullable|string',
+            'payment_method' => 'required|string',
         ]);
 
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        $game = Game::findOrFail($request->game_id);
+        $price = $game->topup_rate * $request->amount;
+
         $transaction = Transaction::create([
-            'transaction_code' => 'TRX-' . time(),
+            'user_id' => Auth::id(),
             'game_id' => $request->game_id,
-            'customer_id' => $request->customer_id,
+            'transaction_id' => 'TX' . time() . rand(1000, 9999),
             'amount' => $request->amount,
-            'item' => $request->item,
-            'quantity' => $request->quantity,
-            'status' => 'pending',
+            'price' => $price,
+            'status' => Transaction::STATUS_PENDING,
+            'player_id' => $request->player_id,
+            'server_id' => $request->server_id,
+            'payment_method' => $request->payment_method,
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil dibuat.');
+        // Process payment (integrate with payment gateway here)
+        $this->processPayment($transaction);
+
+        return redirect()->route('transactions.show', $transaction->id)
+            ->with('success', 'Transaksi berhasil dibuat! Silakan selesaikan pembayaran.');
     }
 
-    public function show(Transaction $transaction)
+    private function processPayment(Transaction $transaction)
     {
-        $transaction->load(['game', 'customer']);
-        return view('transactions.show', compact('transaction'));
+        // Simulate payment processing
+        // In real application, integrate with payment gateway like Midtrans, Xendit, etc.
+        
+        // For demo purposes, automatically mark as success after 5 seconds
+        // In production, this would be handled by payment gateway webhook
+        if (app()->environment('local')) {
+            \Illuminate\Support\Facades\Artisan::call('transactions:process', [
+                'transaction_id' => $transaction->id
+            ]);
+        }
     }
 
-    public function edit(Transaction $transaction)
+    public function getUserTransactions($userId)
     {
-        $games = Game::where('is_active', true)->get();
-        $customers = Customer::all();
-        return view('transactions.edit', compact('transaction', 'games', 'customers'));
-    }
+        $transactions = Transaction::with('game')
+            ->where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    public function update(Request $request, Transaction $transaction)
-    {
-        $request->validate([
-            'game_id' => 'required|exists:games,id',
-            'customer_id' => 'required|exists:customers,id',
-            'amount' => 'required|numeric|min:0',
-            'item' => 'required|string|max:255',
-            'quantity' => 'required|integer|min:1',
-            'status' => 'required|in:pending,processing,completed,failed',
-            'notes' => 'nullable|string',
-        ]);
-
-        $transaction->update($request->all());
-
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil diperbarui.');
-    }
-
-    public function destroy(Transaction $transaction)
-    {
-        $transaction->delete();
-
-        return redirect()->route('transactions.index')
-            ->with('success', 'Transaksi berhasil dihapus.');
-    }
-
-    public function updateStatus(Request $request, Transaction $transaction)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,processing,completed,failed'
-        ]);
-
-        $transaction->update(['status' => $request->status]);
-
-        return response()->json(['success' => 'Status berhasil diperbarui.']);
+        return response()->json($transactions);
     }
 }

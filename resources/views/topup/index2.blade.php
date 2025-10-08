@@ -5,497 +5,781 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toko Top Up | Toko Top Up</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary: #6c5ce7;
-            --secondary: #a29bfe;
-            --accent: #fd79a8;
-            --dark: #2d3436;
-            --light: #f8f9fa;
-            --success: #00b894;
-        }
 
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Warna dari ditusi.co.id
+                        primary: '#0A2463', // Biru navy tua
+                        secondary: '#1E40AF', // Biru medium
+                        accent: '#DC2626', // Merah (dari button ditusi)
+                        dark: '#0F172A', // Biru sangat tua
+                        light: '#F8FAFC', // Abu-abu sangat muda
+                        success: '#059669', // Hijau (dari ditusi)
+                        orange: '#EA580C', // Orange (aksen tambahan)
+                        gray: {
+                            50: '#F8FAFC',
+                            100: '#F1F5F9',
+                            200: '#E2E8F0',
+                            300: '#CBD5E1',
+                            400: '#94A3B8',
+                            500: '#64748B',
+                            600: '#475569',
+                            700: '#334155',
+                            800: '#1E293B',
+                            900: '#0F172A'
+                        }
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'slide-left-out': 'slideLeftOut 0.8s ease-in-out forwards',
+                        'slide-center-to-left': 'slideCenterToLeft 0.8s ease-in-out forwards',
+                        'slide-right-to-center': 'slideRightToCenter 0.8s ease-in-out forwards',
+                        'slide-right-in': 'slideRightIn 0.8s ease-in-out forwards',
+                    },
+                    keyframes: {
+                        slideLeftOut: {
+                            '0%': {
+                                transform: 'translateX(0) rotate(-2deg) scale(1)',
+                                opacity: '1',
+                                zIndex: '1'
+                            },
+                            '100%': {
+                                transform: 'translateX(-100%) rotate(-15deg) scale(0.8)',
+                                opacity: '0',
+                                zIndex: '0'
+                            }
+                        },
+                        slideCenterToLeft: {
+                            '0%': {
+                                transform: 'translateX(0) rotate(0deg) scale(1)',
+                                zIndex: '10'
+                            },
+                            '100%': {
+                                transform: 'translateX(-100%) rotate(-2deg) scale(0.9)',
+                                zIndex: '1'
+                            }
+                        },
+                        slideRightToCenter: {
+                            '0%': {
+                                transform: 'translateX(0) rotate(2deg) scale(1)',
+                                zIndex: '1'
+                            },
+                            '100%': {
+                                transform: 'translateX(-100%) rotate(0deg) scale(1.1)',
+                                zIndex: '10'
+                            }
+                        },
+                        slideRightIn: {
+                            '0%': {
+                                transform: 'translateX(100%) rotate(15deg) scale(0.9)',
+                                opacity: '0',
+                                zIndex: '0'
+                            },
+                            '100%': {
+                                transform: 'translateX(0) rotate(2deg) scale(1)',
+                                opacity: '1',
+                                zIndex: '1'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: var(--dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
-        .navbar {
-            background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            padding: 0.8rem 1rem;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-
-        .nav-link {
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-link:after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: white;
-            transition: width 0.3s ease;
-        }
-
-        .nav-link:hover:after {
-            width: 100%;
-        }
-
-        .dropdown-menu {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .dropdown-item {
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .user-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid white;
-        }
-
-        /* Sisa CSS tetap sama seperti sebelumnya */
-        .hero-section {
-            background: linear-gradient(rgba(108, 92, 231, 0.9), rgba(108, 92, 231, 0.8)), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80');
+        .gaming-bg {
+            background: linear-gradient(135deg, rgba(10, 36, 99, 0.85) 0%, rgba(30, 64, 175, 0.75) 100%),
+                url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
             background-size: cover;
             background-position: center;
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-            border-radius: 0 0 20px 20px;
+
         }
 
-        .game-card {
-            transition: all 0.3s ease;
-            border: none;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 25px;
-            background: white;
-        }
 
-        .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-        }
-
-        .game-card img {
-            height: 200px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .game-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .game-card .card-body {
-            padding: 1.5rem;
-        }
-
-        .game-card .btn-topup {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border: none;
-            border-radius: 50px;
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .game-card .btn-topup:hover {
-            background: linear-gradient(to right, var(--secondary), var(--primary));
-            transform: scale(1.05);
-        }
-
-        .section-title {
+        .slide-card {
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-            text-align: center;
         }
 
-        .section-title:after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            margin: 10px auto;
-            border-radius: 2px;
+        .slide-card:hover {
+            transform: translateY(-8px) scale(1.02);
         }
 
-        .feature-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .features-section {
-            background-color: white;
-            padding: 4rem 0;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-            margin: 3rem 0;
+        .overflow-x-auto::-webkit-scrollbar {
+            display: none;
         }
 
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 2rem 0;
-            margin-top: auto;
+        /* Custom animation classes */
+        .animate-slide-left-out {
+            animation: slideLeftOut 0.8s ease-in-out forwards;
         }
 
-        .social-icons a {
-            color: white;
-            font-size: 1.5rem;
-            margin: 0 10px;
-            transition: all 0.3s ease;
+        .animate-slide-center-to-left {
+            animation: slideCenterToLeft 0.8s ease-in-out forwards;
         }
 
-        .social-icons a:hover {
-            color: var(--secondary);
-            transform: translateY(-3px);
+        .animate-slide-right-to-center {
+            animation: slideRightToCenter 0.8s ease-in-out forwards;
         }
 
-        .badge-popular {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--accent);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            z-index: 10;
-            animation: pulse 2s infinite;
+        .animate-slide-right-in {
+            animation: slideRightIn 0.8s ease-in-out forwards;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(253, 121, 168, 0.6);
-            }
-
-            70% {
-                box-shadow: 0 0 0 10px rgba(253, 121, 168, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(253, 121, 168, 0);
-            }
+        /* Gradient background seperti ditusi */
+        .ditusi-gradient {
+            background: linear-gradient(135deg, #0A2463 0%, #1E40AF 50%, #0A2463 100%);
         }
 
-        .search-container {
-            max-width: 500px;
-            margin: 0 auto 2rem;
-        }
-
-        .search-box {
-            border-radius: 50px;
-            padding: 0.75rem 1.5rem;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-        }
-
-        .search-box:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(108, 92, 231, 0.25);
-        }
-
-        .category-filter {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 2rem;
-        }
-
-        .category-btn {
-            border-radius: 50px;
-            padding: 0.5rem 1.5rem;
-            background: white;
-            border: 2px solid #e0e0e0;
-            transition: all 0.3s ease;
-            font-weight: 500;
-        }
-
-        .category-btn.active,
-        .category-btn:hover {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: white;
-            border-color: transparent;
+        .ditusi-hero-gradient {
+            background: linear-gradient(135deg, #0A2463 0%, #1E40AF 100%);
         }
     </style>
 </head>
 
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <i class="fas fa-gamepad me-2"></i>Toko Top Up
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Beranda</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Game</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Promo</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Bantuan</a>
-                    </li>
-                    <!-- Tampilan sebelum login -->
-                    <li class="nav-item">
-                    <a href="{{ route('login.form') }}" class="nav-link">Masuk</a>
-                    </li>
-                    <li class="nav-item">
-                    <a href="{{ route('register.form') }}" class="nav-link">Daftar</a>
-                    </li>
-                </ul>
+<body class="font-poppins gaming-bg min-h-screen flex flex-col">
 
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-shopping-cart"></i> <span
-                                class="d-none d-md-inline">Keranjang</span></a>
-                    </li>
+    <!-- Navbar -->
+    <nav class="ditusi-gradient shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="flex items-center space-x-2 text-white font-bold text-xl">
+                    <img src="{{asset('images/L.jpg')}}" class="w-8 h-8 rounded-lg" alt="Logo">
+                    <span>LIU Store</span>
+                </a>
 
-                    
+                <!-- Search -->
+                <div class="hidden md:flex items-center">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-search text-gray-400"></i>
+                        </div>
+                        <input type="text"
+                            class="w-80 pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Cari game...">
+                    </div>
+                </div>
 
-                    
-                </ul>
+                <div class="flex items-center space-x-6 text-white">
+                    <a href="{{route('topup.index')}}" class="hover:text-gray-200 transition font-medium">Beranda</a>
+                    <a href="{{route('login.form')}}"
+                        class="bg-accent hover:bg-red-700 px-4 py-2 rounded-full font-medium transition">Masuk</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="hero-section">
-        <div class="container text-center">
-            <h1 class="display-4 fw-bold mb-3">Top Up Game Favoritmu</h1>
-            <p class="lead mb-4">Dapatkan diamond, koin, dan item game dengan proses cepat dan aman</p>
-            <button class="btn btn-light btn-lg px-4 py-2 rounded-pill fw-bold">
-                Jelajahi Sekarang <i class="fas fa-arrow-right ms-2"></i>
-            </button>
+    <!-- Hero 3-Card Slideshow -->
+    <div
+        class="relative h-[600px] ditusi-hero-gradient mb-12 rounded-b-2xl overflow-hidden flex items-center justify-center">
+        <div class="relative w-full max-w-7xl mx-auto px-8 flex items-center justify-center space-x-10"
+            id="slideshow-container">
+
+            <!-- Left Card -->
+            <div id="left-slide"
+                class="slide-card left-card relative w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform -rotate-2 glass-effect z-1">
+                <img id="left-img"
+                    src="{{asset('images/Lblue.jpg')}}"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 id="left-title" class="text-xl font-bold mb-2">Blue Archive</h3>
+                    <p id="left-desc" class="text-sm opacity-90">Top Up Pyroxene Dan Package Request Dengan Harga Terbaik</p>
+                </div>
+                <!-- TOMBOL PREVIOUS DIHAPUS -->
+                <div class="absolute top-4 right-4 bg-primary/80 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    TRENDING</div>
+            </div>
+
+            <!-- Center Card -->
+            <div id="center-slide"
+                class="slide-card center-card relative w-[500px] h-[450px] rounded-3xl overflow-hidden shadow-2xl z-10 glass-effect border-2 border-white/20">
+                <img id="center-img"
+                    src="{{asset('images/Lml.jpg')}}"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
+                    <h3 id="center-title" class="text-3xl font-bold mb-3">Mobile Legends</h3>
+                    <p id="center-desc" class="text-lg opacity-90 mb-6">Top Up Diamond Dengan Proses Instan Dan Aman</p>
+                    <div class="flex space-x-4">
+                        <a href="{{route('login.form')}}"><button
+                            class="bg-accent hover:bg-red-700 text-white px-8 py-3 rounded-full font-bold transition transform shadow-lg">Top
+                            Up Sekarang</button></a>
+                        <button
+                            class="bg-white/20 text-white px-6 py-3 rounded-full font-bold hover:bg-white/30 backdrop-blur-sm transition">Lihat
+                            Detail</button>
+                    </div>
+                </div>
+                <div
+                    class="absolute top-6 right-6 bg-accent text-white px-4 py-2 rounded-full text-base font-bold animate-pulse shadow-lg">
+                    🔥 POPULER</div>
+                <div class="absolute top-6 left-6 bg-success text-white px-3 py-1 rounded-full text-sm font-bold"><i
+                        class="fas fa-bolt mr-1"></i>INSTANT</div>
+            </div>
+
+            <!-- Right Card -->
+            <div id="right-slide"
+                class="slide-card right-card relative w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform rotate-2 glass-effect z-1">
+                <img id="right-img"
+                    src="{{asset('images/LHonkai-Star-Rail.jpg')}}"
+                    class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 id="right-title" class="text-xl font-bold mb-2">Honkai: Star Rail</h3>
+                    <p id="right-desc" class="text-sm opacity-90">Stellar Jade Murah Dengan Proses Cepat</p>
+                </div>
+                <!-- TOMBOL NEXT DIHAPUS -->
+                <div class="absolute top-4 left-4 bg-secondary/80 text-white px-3 py-1 rounded-full text-xs font-bold">
+                    NEW</div>
+            </div>
+
+        </div>
+
+        <!-- Dots -->
+        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4 z-20">
+            <button class="slide-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white active bg-white"
+                data-slide="0"></button>
+            <button class="slide-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white" data-slide="1"></button>
+            <button class="slide-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white" data-slide="2"></button>
+            <button class="slide-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white" data-slide="3"></button>
+            <button class="slide-dot w-4 h-4 rounded-full bg-white/50 hover:bg-white" data-slide="4"></button>
+        </div>
+
+        <!-- ARROWS DIHAPUS -->
+
+        <!-- Background Decoration -->
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="absolute -top-32 -left-32 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl"></div>
+            <div class="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-accent/10 rounded-full blur-3xl"></div>
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-secondary/20 rounded-full blur-3xl">
+            </div>
+        </div>
+
+        <!-- Info -->
+        <div class="absolute top-8 left-1/2 -translate-x-1/2 text-white text-center z-10">
+            <div class="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full">
+                <span class="font-semibold">🎮 99+ Game Tersedia • ⚡ Proses Instan • 🔒 100% Aman</span>
+            </div>
         </div>
     </div>
 
-    <div class="container mb-5">
-        <h2 class="section-title">Pilih Game Favorit Anda</h2>
+    <!-- Promo Section -->
+    <div class="w-full ditusi-gradient py-12 mb-16">
+        <div class="container mx-auto px-6 relative">
+            <h2 class="text-4xl font-bold text-center text-white mb-4">
+                PROMO GAME TERBAIK | TERSEDIA 24 JAM DI SINI
+            </h2>
+            <p class="text-center text-white/80 text-lg max-w-2xl mx-auto">
+                Dapatkan Harga Spesial Dan Bonus Menarik Untuk Top Up Game Favorit Anda
+            </p>
+        </div>
+    </div>
 
-        <div class="search-container">
-            <div class="input-group">
-                <input type="text" class="form-control search-box" placeholder="Cari game...">
-                <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search"></i>
+    <!-- Game Section -->
+    <div class="container mx-auto px-6 mb-16">
+        <!-- Category Filter -->
+        <div class="w-full ditusi-gradient py-1 mb-16 rounded-full ">
+            <div class="absolute bg-accent px-7 py-5 rounded-full ">
+                🔥
+            </div>
+            <button
+                class="ml-8  px-12 py-5 rounded-full text-white font-medium  text-lg"> Top
+                Up Best Sellers</button>
+        </div>
+
+        <!-- Cari bagian Grid Game dan ubah kelas border pada setiap card -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Contoh game cards -->
+            <div
+                class="slide-card bg-white rounded-2xl shadow-lg overflow-hidden relative border-[0.5px] border-gray-100">
+                <span
+                    class="absolute top-3 right-3 bg-accent text-white px-3 py-1 rounded-full text-xs font-bold animate-pulse">Populer</span>
+                <img src="{{asset('images/ml.png')}}" class="w-full h-48 object-cover" alt="Mobile Legends">
+                <div class="p-4">
+                    <h5 class="font-bold text-lg mb-1 text-gray-800">Mobile Legends</h5>
+                    <p class="text-gray-600 text-sm mb-3">Mulai Dari Rp 2.500</p>
+                    <a href="{{route('login.form')}}"
+                        class="block bg-primary text-white text-center py-2 rounded-lg hover:bg-secondary transition font-medium">
+                        Top Up Sekarang
+                    </a>
+                </div>
+            </div>
+
+            <div
+                class="slide-card bg-white rounded-2xl shadow-lg overflow-hidden relative border-[0.5px] border-gray-100">
+                <img src="{{asset('images/Blue-Archive.png')}}"
+                    class="w-full h-48 object-cover" alt="Valorant">
+                <div class="p-4">
+                    <h5 class="font-bold text-lg mb-1 text-gray-800">Blue Archive</h5>
+                    <p class="text-gray-600 text-sm mb-3">Mulai Dari Rp 46.450</p>
+                    <a href="{{route('login.form')}}"
+                        class="block bg-primary text-white text-center py-2 rounded-lg hover:bg-secondary transition font-medium">
+                        Top Up Sekarang
+                    </a>
+                </div>
+            </div>
+
+            <div
+                class="slide-card bg-white rounded-2xl shadow-lg overflow-hidden relative border-[0.5px] border-gray-100">
+                <span
+                    class="absolute top-3 right-3 bg-success text-white px-3 py-1 rounded-full text-xs font-bold">NEW</span>
+                <img src="{{ asset('images/genshin.jpg') }}" class="w-full h-48 object-cover" alt="Genshin Impact">
+                <div class="p-4">
+                    <h5 class="font-bold text-lg mb-1 text-gray-800">Genshin Impact</h5>
+                    <p class="text-gray-600 text-sm mb-3">Mulai Dari Rp 15.000</p>
+                    <a href="{{route('login.form')}}"
+                        class="block bg-primary text-white text-center py-2 rounded-lg hover:bg-secondary transition font-medium">
+                        Top Up Sekarang
+                    </a>
+                </div>
+            </div>
+
+            <div
+                class="slide-card bg-white rounded-2xl shadow-lg overflow-hidden relative border-[0.5px] border-gray-100">
+                <img src="{{asset('images/honkai.jpg')}}"
+                    class="w-full h-48 object-cover" alt="PUBG Mobile">
+                <div class="p-4">
+                    <h5 class="font-bold text-lg mb-1 text-gray-800">Honkai: Star Rail</h5>
+                    <p class="text-gray-600 text-sm mb-3">Mulai Dari Rp 5.000</p>
+                    <a href="{{route('login.form')}}"
+                        class="block bg-primary text-white text-center py-2 rounded-lg hover:bg-secondary transition font-medium">
+                        Top Up Sekarang
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-6 mb-16">
+        <!-- Category Filter -->
+        <div class="w-full ditusi-gradient py-1 mb-16 rounded-full ">
+            <div class="absolute bg-blue-600 px-6 py-5 rounded-full ">
+                ➕
+            </div>
+            <button
+                class=" ml-9 px-12 py-5 rounded-full text-white font-medium  text-lg">Top Up Yang Akan Rilis
                 </button>
-            </div>
-        </div>
-
-        <div class="category-filter">
-            <button class="category-btn active">Semua</button>
-            <button class="category-btn">Mobile</button>
-            <button class="category-btn">PC</button>
-            <button class="category-btn">Console</button>
-            <button class="category-btn">Populer</button>
-        </div>
-
-        <div class="row">
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <span class="badge-popular">Populer</span>
-                    <img src="https://i.ibb.co/0QZcMq0/mlbb.jpg" class="card-img-top" alt="Mobile Legends">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Mobile Legends</h5>
-                        <p class="text-muted">Mulai dari Rp 10.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <img src="https://i.ibb.co/6RJjL2H/ff.jpg" class="card-img-top" alt="Free Fire">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Free Fire</h5>
-                        <p class="text-muted">Mulai dari Rp 5.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <span class="badge-popular">Populer</span>
-                    <img src="https://i.ibb.co/6W0b6z0/pubg.jpg" class="card-img-top" alt="PUBG Mobile">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">PUBG Mobile</h5>
-                        <p class="text-muted">Mulai dari Rp 12.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <img src="https://i.ibb.co/0j7J3y0/valorant.jpg" class="card-img-top" alt="Valorant">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Valorant</h5>
-                        <p class="text-muted">Mulai dari Rp 15.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <img src="https://i.ibb.co/6RJjL2H/genshin.jpg" class="card-img-top" alt="Genshin Impact">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Genshin Impact</h5>
-                        <p class="text-muted">Mulai dari Rp 20.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <img src="https://i.ibb.co/0j7J3y0/cod.jpg" class="card-img-top" alt="Call of Duty">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Call of Duty Mobile</h5>
-                        <p class="text-muted">Mulai dari Rp 8.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <span class="badge-popular">Populer</span>
-                    <img src="https://i.ibb.co/0QZcMq0/apex.jpg" class="card-img-top" alt="Apex Legends">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">Apex Legends</h5>
-                        <p class="text-muted">Mulai dari Rp 15.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-4">
-                <div class="game-card">
-                    <img src="https://i.ibb.co/6W0b6z0/lol.jpg" class="card-img-top" alt="League of Legends">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">League of Legends</h5>
-                        <p class="text-muted">Mulai dari Rp 10.000</p>
-                        <a href="#" class="btn btn-topup text-white">Top Up Sekarang</a>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
-    <div class="features-section">
-        <div class="container">
-            <h2 class="section-title">Mengapa Memilih Kami?</h2>
-            <div class="row text-center">
-                <div class="col-md-4 mb-4">
-                    <div class="feature-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h4>Proses Cepat</h4>
-                    <p class="text-muted">Top up diproses dalam hitungan detik, tidak perlu menunggu lama</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h4>Aman dan Terpercaya</h4>
-                    <p class="text-muted">Transaksi aman dengan sistem pembayaran terenkripsi</p>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="feature-icon">
-                        <i class="fas fa-headset"></i>
-                    </div>
-                    <h4>Bantuan 24/7</h4>
-                    <p class="text-muted">Customer service siap membantu kapan saja</p>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
-    <footer class="text-center">
-        <div class="container">
-            <div class="social-icons mb-3">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-instagram"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-youtube"></i></a>
-                <a href="#"><i class="fab fa-discord"></i></a>
+    <!-- Footer dengan Features -->
+    <footer class="bg-dark text-white mt-auto">
+        <!-- Footer Content -->
+        <div class="py-12">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <!-- Logo dan Company Info -->
+                    <div class="text-center md:text-left mb-8 md:mb-0">
+                        <div class="flex items-center justify-center md:justify-start space-x-2 mb-4">
+                            <img src="{{asset('images/L.jpg')}}" class="w-8 h-8 rounded-lg" alt="Logo">
+                            <span class="text-xl font-bold text-white">LIU Store</span>
+                        </div>
+                        <p class="text-gray-400 max-w-md">
+                            Platform top up game terpercaya dengan pelayanan 24 jam. 
+                            Dapatkan harga terbaik dan proses instan untuk semua game favorit Anda.
+                        </p>
+                    </div>
+
+                    <!-- Features Section -->
+                    <div class="text-center md:text-right mb-8 md:mb-0">
+                        <h3 class="text-xl font-bold mb-4 text-white">Keunggulan Kami</h3>
+                        <div class="grid grid-cols-1 gap-3">
+                            <div class="flex items-center justify-center md:justify-end space-x-2">
+                                <i class="fas fa-bolt text-primary text-lg"></i>
+                                <span class="text-gray-300">Proses Cepat</span>
+                            </div>
+                            <div class="flex items-center justify-center md:justify-end space-x-2">
+                                <i class="fas fa-shield-alt text-primary text-lg"></i>
+                                <span class="text-gray-300">Aman & Terpercaya</span>
+                            </div>
+                            <div class="flex items-center justify-center md:justify-end space-x-2">
+                                <i class="fas fa-headset text-primary text-lg"></i>
+                                <span class="text-gray-300">Bantuan 24/7</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="text-center md:text-right">
+                        <h3 class="text-xl font-bold mb-4 text-white">Ikuti Kami</h3>
+                        <div class="flex justify-center md:justify-end space-x-4 mb-4">
+                            <a href="https://www.facebook.com/" class="text-2xl hover:text-accent transition transform hover:-translate-y-1">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="#" class="text-2xl hover:text-accent transition transform hover:-translate-y-1">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="text-2xl hover:text-accent transition transform hover:-translate-y-1">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.youtube.com/" class="text-2xl hover:text-accent transition transform hover:-translate-y-1">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="#" class="text-2xl hover:text-accent transition transform hover:-translate-y-1">
+                                <i class="fab fa-discord"></i>
+                            </a>
+                        </div>
+                        <p class="text-gray-400">&copy; 2025 LIU Store - Laravel 10. All rights reserved.</p>
+                    </div>
+                </div>
             </div>
-            <p>&copy; 2023 Toko Top Up - Laravel 10. All rights reserved.</p>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Slideshow JS - Update untuk menghapus event listener tombol -->
     <script>
-        // Simple filter functionality for demonstration
-        document.querySelectorAll('.category-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                document.querySelectorAll('.category-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                this.classList.add('active');
+        class ThreeCardSlideshow {
+            constructor() {
+                this.slides = [{
+                        left: {
+                            image: '{{asset('images/Lblue.jpg')}}',
+                            title: 'Blue Archive',
+                            description: 'Top up Pyroxene Dan Package Request dengan harga terbaik'
+                        },
+                        center: {
+                            image: '{{asset('images/Lml.jpg')}}',
+                            title: 'Mobile Legends',
+                            description: 'Top up diamond dengan proses instan dan aman'
+                        },
+                        right: {
+                            image: '{{asset('images/LHonkai-Star-Rail.jpg')}}',
+                            title: 'Honkai: Star Rail',
+                            description: 'Stellar Jade Murah Dengan Proses Cepat'
+                        }
+                    },
+                    {
+                        left: {
+                            image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                            title: 'PUBG Mobile',
+                            description: 'UC murah dengan proses cepat'
+                        },
+                        center: {
+                            image: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                            title: 'Valorant',
+                            description: 'Top up points dengan harga spesial'
+                        },
+                        right: {
+                            image: '{{asset('images/LGenshin.jpg')}}',
+                            title: 'Genshin Impact',
+                            description: 'Genesis Crystal Promo'
+                        }
+                    },
+                    {
+                        left: {
+                            image: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                            title: 'Free Fire',
+                            description: 'Diamond FF bonus menarik'
+                        },
+                        center: {
+                            image: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                            title: 'PUBG Mobile',
+                            description: 'UC murah proses instan'
+                        },
+                        right: {
+                            image: '{{asset('images/Lblue.jpg')}}',
+                            title: 'Blue Archive',
+                            description: 'Top up Pyroxene Dan Package Request Dengan Harga Terbaik'
+                        }
+                    },
+                    {
+                        left: {
+                            image: 'https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                            title: 'Genshin Impact',
+                            description: 'Genesis crystal promo'
+                        },
+                        center: {
+                            image: 'https://images.unsplash.com/photo-1542751110-97427bbecf20?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                            title: 'Free Fire',
+                            description: 'Diamond FF bonus menarik'
+                        },
+                        right: {
+                            image: '{{asset('images/Lml.jpg')}}',
+                            title: 'Mobile Legends',
+                            description: 'Top Up Diamond Dengan Proses Instan Dan Aman'
+                        }
+                    }
+                    
+                ];
 
-                // In a real application, this would filter the games
-                // For this demo, we'll just show a message
-                const category = this.textContent;
-                alert(`Menampilkan game dalam kategori: ${category}`);
+                this.currentSlide = 0;
+                this.slideInterval = null;
+                this.slideDuration = 5000;
+                this.isAnimating = false;
+
+                this.init();
+            }
+
+            init() {
+                document.querySelectorAll('.slide-dot').forEach((dot, idx) => dot.addEventListener('click', () => this
+                    .goToSlide(idx)));
+                
+                // HAPUS EVENT LISTENER UNTUK TOMBOL PREV/NEXT DAN CLICK CARD
+                // document.querySelector('.slide-prev').addEventListener('click', () => this.prevSlide());
+                // document.querySelector('.slide-next').addEventListener('click', () => this.nextSlide());
+                // document.querySelector('.left-card').addEventListener('click', () => this.prevSlide());
+                // document.querySelector('.right-card').addEventListener('click', () => this.nextSlide());
+
+                this.startAutoSlide();
+                const container = document.getElementById('slideshow-container');
+                container.addEventListener('mouseenter', () => this.stopAutoSlide());
+                container.addEventListener('mouseleave', () => this.startAutoSlide());
+            }
+
+            // ... (method lainnya tetap sama)
+            async runAnimation(direction = 'next') {
+                if (this.isAnimating) return;
+                this.isAnimating = true;
+
+                const left = document.getElementById('left-slide');
+                const center = document.getElementById('center-slide');
+                const right = document.getElementById('right-slide');
+
+                // Simpan konten asli
+                const leftContent = {
+                    img: document.getElementById('left-img').src,
+                    title: document.getElementById('left-title').textContent,
+                    desc: document.getElementById('left-desc').textContent
+                };
+                const centerContent = {
+                    img: document.getElementById('center-img').src,
+                    title: document.getElementById('center-title').textContent,
+                    desc: document.getElementById('center-desc').textContent
+                };
+                const rightContent = {
+                    img: document.getElementById('right-img').src,
+                    title: document.getElementById('right-title').textContent,
+                    desc: document.getElementById('right-desc').textContent
+                };
+
+                // Animasi perpindahan
+                left.classList.add('animate-slide-left-out');
+                center.classList.add('animate-slide-center-to-left');
+                right.classList.add('animate-slide-right-to-center');
+
+                await new Promise(r => setTimeout(r, 800));
+
+                // Update konten
+                document.getElementById('left-img').src = centerContent.img;
+                document.getElementById('left-title').textContent = centerContent.title;
+                document.getElementById('left-desc').textContent = centerContent.desc;
+
+                document.getElementById('center-img').src = rightContent.img;
+                document.getElementById('center-title').textContent = rightContent.title;
+                document.getElementById('center-desc').textContent = rightContent.desc;
+
+                // Reset posisi card kiri dan tengah
+                left.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+                center.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+
+                // Atur posisi card kanan untuk animasi masuk
+                right.style.transform = 'translateX(100%)';
+                right.style.opacity = '0';
+                right.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+
+                // Update konten card kanan dengan slide berikutnya
+                const nextSlideIndex = (this.currentSlide + 1) % this.slides.length;
+                const nextSlide = this.slides[nextSlideIndex];
+                document.getElementById('right-img').src = nextSlide.right.image;
+                document.getElementById('right-title').textContent = nextSlide.right.title;
+                document.getElementById('right-desc').textContent = nextSlide.right.description;
+
+                // Update currentSlide
+                this.currentSlide = nextSlideIndex;
+
+                // Animasi card kanan masuk
+                right.classList.add('animate-slide-right-in');
+
+                await new Promise(r => setTimeout(r, 800));
+
+                right.classList.remove('animate-slide-right-in');
+                right.style.transform = 'rotate(2deg)';
+                right.style.opacity = '1';
+
+                // Update dots
+                document.querySelectorAll('.slide-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === this.currentSlide);
+                    dot.classList.toggle('bg-white', idx === this.currentSlide);
+                    dot.classList.toggle('bg-white/50', idx !== this.currentSlide);
+                });
+
+                this.isAnimating = false;
+            }
+
+            async nextSlide() {
+                await this.runAnimation('next');
+                this.restartAutoSlide();
+            }
+
+            async prevSlide() {
+                if (this.isAnimating) return;
+                this.isAnimating = true;
+
+                const left = document.getElementById('left-slide');
+                const center = document.getElementById('center-slide');
+                const right = document.getElementById('right-slide');
+
+                // Simpan konten asli
+                const leftContent = {
+                    img: document.getElementById('left-img').src,
+                    title: document.getElementById('left-title').textContent,
+                    desc: document.getElementById('left-desc').textContent
+                };
+                const centerContent = {
+                    img: document.getElementById('center-img').src,
+                    title: document.getElementById('center-title').textContent,
+                    desc: document.getElementById('center-desc').textContent
+                };
+                const rightContent = {
+                    img: document.getElementById('right-img').src,
+                    title: document.getElementById('right-title').textContent,
+                    desc: document.getElementById('right-desc').textContent
+                };
+
+                // Animasi perpindahan untuk prev
+                right.classList.add('animate-slide-left-out');
+                center.classList.add('animate-slide-right-to-center');
+                left.classList.add('animate-slide-center-to-left');
+
+                await new Promise(r => setTimeout(r, 800));
+
+                // Update konten
+                document.getElementById('right-img').src = centerContent.img;
+                document.getElementById('right-title').textContent = centerContent.title;
+                document.getElementById('right-desc').textContent = centerContent.desc;
+
+                document.getElementById('center-img').src = leftContent.img;
+                document.getElementById('center-title').textContent = leftContent.title;
+                document.getElementById('center-desc').textContent = leftContent.desc;
+
+                // Reset posisi card kanan dan tengah
+                right.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+                center.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+
+                // Atur posisi card kiri untuk animasi masuk
+                left.style.transform = 'translateX(-100%)';
+                left.style.opacity = '0';
+                left.classList.remove('animate-slide-left-out', 'animate-slide-center-to-left',
+                    'animate-slide-right-to-center', 'animate-slide-right-in');
+
+                // Update konten card kiri dengan slide sebelumnya
+                const prevSlideIndex = (this.currentSlide - 1 + this.slides.length) % this.slides.length;
+                const prevSlide = this.slides[prevSlideIndex];
+                document.getElementById('left-img').src = prevSlide.left.image;
+                document.getElementById('left-title').textContent = prevSlide.left.title;
+                document.getElementById('left-desc').textContent = prevSlide.left.description;
+
+                // Update currentSlide
+                this.currentSlide = prevSlideIndex;
+
+                // Animasi card kiri masuk
+                left.classList.add('animate-slide-right-in');
+
+                await new Promise(r => setTimeout(r, 800));
+
+                left.classList.remove('animate-slide-right-in');
+                left.style.transform = 'rotate(-2deg)';
+                left.style.opacity = '1';
+
+                // Update dots
+                document.querySelectorAll('.slide-dot').forEach((dot, idx) => {
+                    dot.classList.toggle('active', idx === this.currentSlide);
+                    dot.classList.toggle('bg-white', idx === this.currentSlide);
+                    dot.classList.toggle('bg-white/50', idx !== this.currentSlide);
+                });
+
+                this.isAnimating = false;
+                this.restartAutoSlide();
+            }
+
+            async goToSlide(index) {
+                if (this.isAnimating || index === this.currentSlide) return;
+
+                const direction = index > this.currentSlide ? 'next' : 'prev';
+                let steps;
+                if (direction === 'next') {
+                    steps = index - this.currentSlide;
+                } else {
+                    steps = this.currentSlide - index;
+                }
+
+                for (let i = 0; i < steps; i++) {
+                    if (direction === 'next') {
+                        await this.nextSlide();
+                    } else {
+                        await this.prevSlide();
+                    }
+                }
+            }
+
+            startAutoSlide() {
+                this.stopAutoSlide();
+                this.slideInterval = setInterval(() => this.nextSlide(), this.slideDuration);
+            }
+
+            stopAutoSlide() {
+                if (this.slideInterval) {
+                    clearInterval(this.slideInterval);
+                    this.slideInterval = null;
+                }
+            }
+
+            restartAutoSlide() {
+                this.stopAutoSlide();
+                this.startAutoSlide();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new ThreeCardSlideshow();
+
+            // category filter
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => {
+                        b.classList.remove('active', 'bg-primary', 'text-white',
+                            'border-primary');
+                        b.classList.add('bg-white', 'text-primary', 'border-primary');
+                    });
+                    this.classList.remove('bg-white', 'text-primary', 'border-primary');
+                    this.classList.add('active', 'bg-primary', 'text-white', 'border-primary');
+                    console.log('Filter:', this.textContent);
+                });
             });
         });
-
-        // Simulasi status login (bisa diubah sesuai kebutuhan)
-        const isLoggedIn = true; // Ubah ke false untuk melihat tampilan sebelum login
-
-        if (isLoggedIn) {
-            document.getElementById('before-login').classList.add('d-none');
-            document.getElementById('after-login').classList.remove('d-none');
-        } else {
-            document.getElementById('before-login').classList.remove('d-none');
-            document.getElementById('after-login').classList.add('d-none');
-        }
     </script>
 </body>
 
